@@ -29,11 +29,24 @@ const parseFile = (fileBuffer) => {
   return file;
 };
 
-const logMessage = (file) => {
-  console.log(`${filename} is ${file.data.length} bytes long and is of mime type ${file.mime}`);
+const upload = (file) => {
+  const options = {
+    Bucket: 'bucketforbeers',
+    Body: file.data,
+    ACL: 'public-read',
+    ContentType: file.mime,
+    Key: `test/test.${file.ext}`
+  };
+  return Promise.resolve(options);
+};
+
+const logMessage = (upload) => {
+  delete upload.Body;
+  console.log(`The upload options are ${JSON.stringify(upload)}`);
 };
 
 readFile(filename)
 .then(parseFile)
+.then(upload)
 .then(logMessage)
 .catch(console.error);
